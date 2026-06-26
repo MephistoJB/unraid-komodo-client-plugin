@@ -1,0 +1,109 @@
+<?xml version='1.0' standalone='yes'?>
+<!DOCTYPE PLUGIN [
+<!ENTITY name        "komodo-periphery">
+<!ENTITY author      "MephistoJB">
+<!ENTITY version     "2026.06.26">
+<!ENTITY launch      "Settings/Komodo Periphery">
+<!ENTITY pluginURL   "https://raw.githubusercontent.com/MephistoJB/unraid-komodo-client-plugin/main/komodo-periphery.plg">
+<!ENTITY bundle      "komodo-periphery-2026.06.26-x86_64-1.tgz">
+<!ENTITY bundleURL   "https://github.com/MephistoJB/unraid-komodo-client-plugin/releases/download/v2026.06.26/komodo-periphery-2026.06.26-x86_64-1.tgz">
+<!ENTITY bundleSHA256 "ccd8c68ae3cbfe9dc316fa80e81d084a77e77b13ede40ad633a7a10bef0f02df">
+<!ENTITY supportURL  "https://github.com/MephistoJB/unraid-komodo-client-plugin/issues">
+<!ENTITY projectURL  "https://github.com/MephistoJB/unraid-komodo-client-plugin">
+<!ENTITY readmeURL   "https://github.com/MephistoJB/unraid-komodo-client-plugin#readme">
+<!ENTITY plugdir     "/usr/local/emhttp/plugins/&name;">
+<!ENTITY cfgdir      "/boot/config/plugins/&name;">
+]>
+
+<PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" icon="server" min="6.12.0" pluginURL="&pluginURL;" support="&supportURL;" project="&projectURL;" readme="&readmeURL;">
+
+<DESCRIPTION>Run Komodo Periphery directly on Unraid as a native host service. The plugin keeps configuration under /boot/config/plugins/komodo-periphery and persistent Komodo state under /boot/config/komodo/periphery so updates do not rotate keys or lose onboarding.  </DESCRIPTION>
+
+<CHANGES><![CDATA[
+
+## 2026.06.26
+
+- Initial production-oriented Unraid plugin scaffold for Komodo Periphery
+- Native host service management via Unraid `rc.d`, without Docker or `systemd`
+- Persistent config, keys, runtime config, and CA feed metadata
+- GitHub-ready bundle build and `.plg` generation scripts
+]]></CHANGES>
+
+<FILE Name="&cfgdir;/&bundle;">
+<URL>&bundleURL;</URL>
+<SHA256>&bundleSHA256;</SHA256>
+</FILE>
+
+<FILE Run="/bin/bash">
+<INLINE><![CDATA[
+#!/bin/bash
+set -euo pipefail
+
+PLUGIN_NAME="&name;"
+PLUGIN_VERSION="&version;"
+CFG_DIR="/boot/config/plugins/${PLUGIN_NAME}"
+STATE_DIR="/boot/config/komodo/periphery"
+BUNDLE="${CFG_DIR}/&bundle;"
+INSTALL_DIR="/usr/local/emhttp/plugins/${PLUGIN_NAME}"
+RC_SCRIPT="/etc/rc.d/rc.${PLUGIN_NAME}"
+
+mkdir -p "${CFG_DIR}" "${STATE_DIR}"
+
+if [[ ! -f "${BUNDLE}" ]]; then
+  echo "Bundle missing: ${BUNDLE}" >&2
+  exit 1
+fi
+
+if [[ -x "${RC_SCRIPT}" ]]; then
+  "${RC_SCRIPT}" stop || true
+fi
+
+rm -rf "${INSTALL_DIR}"
+mkdir -p "${INSTALL_DIR}"
+tar -xzf "${BUNDLE}" -C /
+
+chmod 0755 "/usr/local/emhttp/plugins/${PLUGIN_NAME}/scripts/"*.sh
+chmod 0755 "/etc/rc.d/rc.${PLUGIN_NAME}"
+
+rm -f $(ls "${CFG_DIR}/${PLUGIN_NAME}-"*-x86_64-1.tgz 2>/dev/null | grep -v "${PLUGIN_VERSION}" || true)
+
+if [[ -x "${RC_SCRIPT}" ]]; then
+  "${RC_SCRIPT}" install-init || true
+  if grep -q '^SERVICE_ENABLED="yes"' "${CFG_DIR}/${PLUGIN_NAME}.cfg" 2>/dev/null; then
+    "${RC_SCRIPT}" start || true
+  fi
+fi
+
+echo ""
+echo "----------------------------------------------------"
+echo " ${PLUGIN_NAME} installed"
+echo " Plugin version: ${PLUGIN_VERSION}"
+echo " Komodo binary: v2.2.0"
+echo "----------------------------------------------------"
+echo ""
+]]></INLINE>
+</FILE>
+
+<FILE Run="/bin/bash" Method="remove">
+<INLINE><![CDATA[
+#!/bin/bash
+set -euo pipefail
+
+PLUGIN_NAME="&name;"
+RC_SCRIPT="/etc/rc.d/rc.${PLUGIN_NAME}"
+
+if [[ -x "${RC_SCRIPT}" ]]; then
+  "${RC_SCRIPT}" stop || true
+fi
+
+rm -f "${RC_SCRIPT}"
+rm -rf "/usr/local/emhttp/plugins/${PLUGIN_NAME}"
+
+echo "Persistent files preserved:"
+echo "  /boot/config/plugins/${PLUGIN_NAME}"
+echo "  /boot/config/komodo/periphery"
+echo "Remove them manually only if you want to rotate keys and wipe config."
+]]></INLINE>
+</FILE>
+
+</PLUGIN>

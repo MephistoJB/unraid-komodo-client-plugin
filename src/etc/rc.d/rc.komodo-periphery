@@ -1,0 +1,37 @@
+#!/bin/bash
+
+PLUGIN="komodo-periphery"
+BASE="/usr/local/emhttp/plugins/${PLUGIN}/scripts"
+
+run_cmd() {
+  if [[ ! -x "${BASE}/$1" ]]; then
+    echo "Missing script: ${BASE}/$1" >&2
+    exit 1
+  fi
+  shift
+  "${BASE}/$1" "$@"
+}
+
+case "${1:-}" in
+  start)
+    exec "${BASE}/start.sh"
+    ;;
+  stop)
+    exec "${BASE}/stop.sh"
+    ;;
+  restart)
+    "${BASE}/stop.sh" || true
+    exec "${BASE}/start.sh"
+    ;;
+  status)
+    exec "${BASE}/status.sh"
+    ;;
+  install-init)
+    exec "${BASE}/init.sh"
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart|status|install-init}"
+    exit 1
+    ;;
+esac
+

@@ -1,0 +1,188 @@
+Menu="Settings"
+Title="Komodo Periphery"
+Icon="fa-server"
+---
+<?php
+require_once "/usr/local/emhttp/plugins/dynamix/include/Helpers.php";
+require_once "/usr/local/emhttp/plugins/dynamix/include/Wrappers.php";
+
+$plugin = "komodo-periphery";
+$cfg = parse_plugin_cfg($plugin);
+$status = [];
+$statusOutput = shell_exec("/usr/local/emhttp/plugins/komodo-periphery/scripts/status.sh 2>/dev/null");
+if (is_string($statusOutput) && trim($statusOutput) !== "") {
+    $status = parse_ini_string($statusOutput, false, INI_SCANNER_RAW) ?: [];
+}
+
+$message = "";
+$messageType = "normal";
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['service_action'], $_POST['csrf_token']) && $_POST['csrf_token'] === $var['csrf_token']) {
+    $action = $_POST['service_action'];
+    $allowed = ['start', 'stop', 'restart'];
+    if (in_array($action, $allowed, true)) {
+        exec("/etc/rc.d/rc.komodo-periphery " . escapeshellarg($action) . " 2>&1", $cmdOutput, $code);
+        $message = implode("\n", $cmdOutput);
+        $messageType = $code === 0 ? "success" : "error";
+        $statusOutput = shell_exec("/usr/local/emhttp/plugins/komodo-periphery/scripts/status.sh 2>/dev/null");
+        if (is_string($statusOutput) && trim($statusOutput) !== "") {
+            $status = parse_ini_string($statusOutput, false, INI_SCANNER_RAW) ?: [];
+        }
+    }
+}
+
+$running = ($status['running'] ?? 'no') === 'yes';
+$publicKey = $status['public_key'] ?? '';
+$pluginVersion = $status['plugin_version'] ?? 'unknown';
+?>
+<style>
+.komodo-card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 18px;
+  background: linear-gradient(135deg, rgba(16, 42, 67, 0.06), rgba(31, 122, 140, 0.08));
+}
+.komodo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px 18px;
+}
+.komodo-kv strong {
+  display: block;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  opacity: .7;
+  margin-bottom: 4px;
+}
+.komodo-pubkey {
+  width: 100%;
+  min-height: 92px;
+  font-family: monospace;
+}
+.komodo-message {
+  white-space: pre-wrap;
+  padding: 10px 12px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+}
+.komodo-message.success {
+  background: rgba(44, 160, 44, .12);
+  border: 1px solid rgba(44, 160, 44, .35);
+}
+.komodo-message.error {
+  background: rgba(192, 57, 43, .12);
+  border: 1px solid rgba(192, 57, 43, .35);
+}
+</style>
+
+<div class="komodo-card">
+  <div class="komodo-grid">
+    <div class="komodo-kv">
+      <strong>Status</strong>
+      <?= $running ? "Running" : "Stopped"; ?>
+    </div>
+    <div class="komodo-kv">
+      <strong>Plugin Version</strong>
+      <?= htmlspecialchars($pluginVersion); ?>
+    </div>
+    <div class="komodo-kv">
+      <strong>Connect As</strong>
+      <?= htmlspecialchars($status['connect_as'] ?? ''); ?>
+    </div>
+    <div class="komodo-kv">
+      <strong>Core Address</strong>
+      <?= htmlspecialchars($status['core_address'] ?? ''); ?>
+    </div>
+  </div>
+</div>
+
+<?php if ($message !== ""): ?>
+  <div class="komodo-message <?= $messageType === 'success' ? 'success' : 'error'; ?>"><?= htmlspecialchars($message); ?></div>
+<?php endif; ?>
+
+<form method="POST">
+  <input type="hidden" name="csrf_token" value="<?= $var['csrf_token']; ?>">
+  <?php if ($running): ?>
+    <input type="submit" name="service_action" value="stop">
+    <input type="submit" name="service_action" value="restart">
+  <?php else: ?>
+    <input type="submit" name="service_action" value="start">
+  <?php endif; ?>
+  <input type="button" value="Reload" onclick="location.reload();">
+</form>
+
+<br>
+
+<form method="POST" action="/update.php" target="progressFrame" markdown="1">
+  <input type="hidden" name="#file" value="komodo-periphery/komodo-periphery.cfg">
+
+_(Service Enabled)_:
+: <select name="SERVICE_ENABLED" class="narrow">
+    <option value="no" <?= ($cfg['SERVICE_ENABLED'] ?? 'no') === 'no' ? 'selected' : ''; ?>>Disabled</option>
+    <option value="yes" <?= ($cfg['SERVICE_ENABLED'] ?? 'no') === 'yes' ? 'selected' : ''; ?>>Enabled</option>
+  </select>
+
+> When enabled, the plugin starts Komodo Periphery after install, update, and boot.
+
+_(PERIPHERY_CORE_ADDRESS)_:
+: <input type="text" name="PERIPHERY_CORE_ADDRESS" class="wide" value="<?= htmlspecialchars($cfg['PERIPHERY_CORE_ADDRESS'] ?? ''); ?>">
+
+_(PERIPHERY_CONNECT_AS)_:
+: <input type="text" name="PERIPHERY_CONNECT_AS" class="wide" value="<?= htmlspecialchars($cfg['PERIPHERY_CONNECT_AS'] ?? ''); ?>">
+
+_(PERIPHERY_ONBOARDING_KEY)_:
+: <input type="password" name="PERIPHERY_ONBOARDING_KEY" class="wide" value="<?= htmlspecialchars($cfg['PERIPHERY_ONBOARDING_KEY'] ?? ''); ?>">
+
+> Optional. Needed for first-time outbound onboarding when the target server does not already exist in Komodo Core.
+
+_(PERIPHERY_ROOT_DIRECTORY)_:
+: <input type="text" name="PERIPHERY_ROOT_DIRECTORY" class="wide" value="<?= htmlspecialchars($cfg['PERIPHERY_ROOT_DIRECTORY'] ?? '/boot/config/komodo/periphery/data'); ?>">
+
+> Default is on the USB flash for a self-contained setup. For heavier repo, stack, or build activity, move this to cache or appdata to reduce flash wear.
+
+_(PERIPHERY_LOG_LEVEL)_:
+: <select name="PERIPHERY_LOG_LEVEL" class="narrow">
+    <?php foreach (['error', 'warn', 'info', 'debug', 'trace'] as $level): ?>
+      <option value="<?= $level; ?>" <?= ($cfg['PERIPHERY_LOG_LEVEL'] ?? 'info') === $level ? 'selected' : ''; ?>><?= strtoupper($level); ?></option>
+    <?php endforeach; ?>
+  </select>
+
+_(Disable Terminals)_:
+: <select name="PERIPHERY_DISABLE_TERMINALS" class="narrow">
+    <option value="no" <?= ($cfg['PERIPHERY_DISABLE_TERMINALS'] ?? 'no') === 'no' ? 'selected' : ''; ?>>No</option>
+    <option value="yes" <?= ($cfg['PERIPHERY_DISABLE_TERMINALS'] ?? 'no') === 'yes' ? 'selected' : ''; ?>>Yes</option>
+  </select>
+
+_(Disable Container Terminals)_:
+: <select name="PERIPHERY_DISABLE_CONTAINER_TERMINALS" class="narrow">
+    <option value="no" <?= ($cfg['PERIPHERY_DISABLE_CONTAINER_TERMINALS'] ?? 'no') === 'no' ? 'selected' : ''; ?>>No</option>
+    <option value="yes" <?= ($cfg['PERIPHERY_DISABLE_CONTAINER_TERMINALS'] ?? 'no') === 'yes' ? 'selected' : ''; ?>>Yes</option>
+  </select>
+
+_(PERIPHERY_CORE_PUBLIC_KEYS)_:
+: <input type="text" name="PERIPHERY_CORE_PUBLIC_KEYS" class="wide" value="<?= htmlspecialchars($cfg['PERIPHERY_CORE_PUBLIC_KEYS'] ?? ''); ?>">
+
+_(Include Disk Mounts)_:
+: <input type="text" name="PERIPHERY_INCLUDE_DISK_MOUNTS" class="wide" value="<?= htmlspecialchars($cfg['PERIPHERY_INCLUDE_DISK_MOUNTS'] ?? ''); ?>">
+
+_(Exclude Disk Mounts)_:
+: <input type="text" name="PERIPHERY_EXCLUDE_DISK_MOUNTS" class="wide" value="<?= htmlspecialchars($cfg['PERIPHERY_EXCLUDE_DISK_MOUNTS'] ?? ''); ?>">
+
+_(Public Key)_:
+: <textarea class="komodo-pubkey" readonly><?= htmlspecialchars($publicKey); ?></textarea>
+
+> Generated by Komodo Periphery and persisted at `<?= htmlspecialchars($status['public_key_file'] ?? '/boot/config/komodo/periphery/keys/periphery.pub'); ?>`.
+
+_(Runtime Config File)_:
+: `<?= htmlspecialchars($status['runtime_config_file'] ?? '/boot/config/komodo/periphery/config/periphery.config.toml'); ?>`
+
+_(Runtime Log File)_:
+: `<?= htmlspecialchars($status['log_file'] ?? '/var/log/komodo-periphery.log'); ?>`
+
+&nbsp;
+: <span class="buttons-spaced">
+    <input type="submit" value="_(Apply)_">
+    <input type="button" value="_(Done)_" onclick="done()">
+  </span>
+</form>

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title">
+  <title>Komodo Periphery</title>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#102a43" />
+      <stop offset="100%" stop-color="#1f7a8c" />
+    </linearGradient>
+  </defs>
+  <rect width="256" height="256" rx="48" fill="url(#bg)" />
+  <path d="M58 84h140v24H58zm0 64h140v24H58z" fill="#d9f0ff" opacity=".9" />
+  <circle cx="84" cy="96" r="10" fill="#7bdff6" />
+  <circle cx="84" cy="160" r="10" fill="#7bdff6" />
+  <path d="M152 62c18 0 32 14 32 32v68c0 18-14 32-32 32h-48v-20h48c7 0 12-5 12-12V94c0-7-5-12-12-12h-48V62z" fill="#f4d35e" />
+  <path d="M96 62h20v132H96z" fill="#ee6c4d" />
+</svg>
+

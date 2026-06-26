@@ -1,0 +1,10 @@
+#!/bin/bash
+set -euo pipefail
+
+PLUGIN="komodo-periphery"
+
+if [[ -x "/etc/rc.d/rc.${PLUGIN}" ]]; then
+  logger -t "${PLUGIN}" "Unraid stopping event received, stopping Komodo Periphery"
+  /etc/rc.d/rc.${PLUGIN} stop >/dev/null 2>&1 || true
+fi
+

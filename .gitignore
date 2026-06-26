@@ -1,3 +1,8 @@
-AGENTS.md
-AGENTS.md.example.md
+dist/
+build/
+.DS_Store
+*.log
 token.md
+*.tgz
+*.txz
+

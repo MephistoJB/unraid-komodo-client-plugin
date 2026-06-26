@@ -1,0 +1,15 @@
+#!/bin/bash
+set -euo pipefail
+
+PLUGIN="komodo-periphery"
+CONFIG_FILE="/boot/config/plugins/${PLUGIN}/${PLUGIN}.cfg"
+
+if [[ ! -f "${CONFIG_FILE}" ]]; then
+  exit 0
+fi
+
+if grep -q '^SERVICE_ENABLED="yes"' "${CONFIG_FILE}" 2>/dev/null; then
+  logger -t "${PLUGIN}" "Unraid started event received, starting Komodo Periphery"
+  /etc/rc.d/rc.${PLUGIN} start >/dev/null 2>&1 &
+fi
+

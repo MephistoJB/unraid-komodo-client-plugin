@@ -1,0 +1,2 @@
+No external plugin dependencies. Docker is optional for Komodo-managed workloads, but the plugin itself runs natively on the Unraid host.
+
