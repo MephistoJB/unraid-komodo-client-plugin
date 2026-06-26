@@ -65,6 +65,24 @@ It also exposes a few pragmatic extras:
 - `PERIPHERY_CORE_PUBLIC_KEYS`
 - include / exclude disk mount filters
 
+## Onboarding
+
+The plugin supports the two common Komodo onboarding models:
+
+1. Existing server identity in Komodo Core
+   - set `PERIPHERY_CORE_ADDRESS`
+   - set `PERIPHERY_CONNECT_AS` to the existing server name or ID
+   - leave `PERIPHERY_ONBOARDING_KEY` empty
+
+2. First-time enrollment with onboarding key
+   - generate an onboarding key in Komodo Core
+   - set `PERIPHERY_CORE_ADDRESS`
+   - set `PERIPHERY_CONNECT_AS`
+   - paste the onboarding key into `PERIPHERY_ONBOARDING_KEY`
+   - start the service
+
+You can also review the generated Periphery public key from the plugin UI and use it for an approval flow based on explicit public keys.
+
 ## Build A Release
 
 This repository does not commit the upstream Komodo binary. Instead, the build step downloads the pinned official Linux `x86_64` artifact from the current stable Komodo release and packages it into the plugin bundle.
@@ -101,13 +119,22 @@ After publishing a GitHub release that contains the generated bundle:
 1. Open `Plugins` in Unraid.
 2. Choose `Install Plugin`.
 3. Paste the raw GitHub URL to [`komodo-periphery.plg`](https://raw.githubusercontent.com/MephistoJB/unraid-komodo-client-plugin/main/komodo-periphery.plg).
-4. Open `Network Services -> Komodo Periphery`.
+4. Open `Settings -> Network Services -> Komodo Periphery`.
 5. Set:
    - `PERIPHERY_CORE_ADDRESS`
    - `PERIPHERY_CONNECT_AS`
    - optionally `PERIPHERY_ONBOARDING_KEY`
    - `Service Enabled = Enabled`
 6. Click `Apply`, then start the service if it is not already running.
+
+The UI is split into:
+
+- `Overview`
+- `Status`
+- `Settings`
+- `Info`
+
+This follows the usual Unraid plugin pattern of a single entry point with dedicated subpages for control, configuration, and documentation.
 
 ## Update Strategy
 

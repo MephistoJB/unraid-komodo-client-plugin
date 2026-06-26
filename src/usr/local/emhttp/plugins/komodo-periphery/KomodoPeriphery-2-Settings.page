@@ -1,8 +1,8 @@
-Menu="NetworkServices"
-Title="Komodo Periphery"
+Menu="Komodo Periphery"
+Title="Settings"
 Icon="fa-server"
+Tag="gears"
 Type="xmenu"
-Tabs="true"
 Markdown="false"
 ---
 <?php
@@ -10,7 +10,7 @@ Markdown="false"
 try {
     $docroot = $docroot ?? $_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp';
     require_once "{$docroot}/plugins/komodo-periphery/include/page.php";
-    echo KomodoPeriphery\getPage("Overview", false, array("var" => $var ?? null));
+    echo KomodoPeriphery\getPage("Settings");
 } catch (Throwable $e) {
     echo "An error occurred: <pre>" . print_r($e, true) . "</pre>";
 }

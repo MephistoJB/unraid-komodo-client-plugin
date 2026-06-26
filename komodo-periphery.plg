@@ -7,7 +7,7 @@
 <!ENTITY pluginURL   "https://raw.githubusercontent.com/MephistoJB/unraid-komodo-client-plugin/main/komodo-periphery.plg">
 <!ENTITY bundle      "komodo-periphery-2026.06.26-x86_64-1.tgz">
 <!ENTITY bundleURL   "https://github.com/MephistoJB/unraid-komodo-client-plugin/releases/download/v2026.06.26/komodo-periphery-2026.06.26-x86_64-1.tgz">
-<!ENTITY bundleSHA256 "8a5daa95b3686565f10e3485205ec13328ed80b66f5da299381f3f3d903661e2">
+<!ENTITY bundleSHA256 "5a9db40c86fc37ca4cfc1c896862bc498055eee08165d4a4c9a40950a1701442">
 <!ENTITY supportURL  "https://github.com/MephistoJB/unraid-komodo-client-plugin/issues">
 <!ENTITY projectURL  "https://github.com/MephistoJB/unraid-komodo-client-plugin">
 <!ENTITY readmeURL   "https://github.com/MephistoJB/unraid-komodo-client-plugin#readme">
