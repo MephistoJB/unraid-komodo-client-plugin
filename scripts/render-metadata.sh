@@ -55,11 +55,11 @@ ${CHANGELOG_BODY}
 #!/bin/bash
 set -euo pipefail
 
-PLUGIN_NAME="&name;"
-PLUGIN_VERSION="&version;"
+PLUGIN_NAME="${PLUGIN_NAME}"
+PLUGIN_VERSION="${PLUGIN_VERSION}"
 CFG_DIR="/boot/config/plugins/\${PLUGIN_NAME}"
 STATE_DIR="/boot/config/komodo/periphery-agent"
-BUNDLE="\${CFG_DIR}/&bundle;"
+BUNDLE="\${CFG_DIR}/$(bundle_name)"
 INSTALL_DIR="/usr/local/emhttp/plugins/\${PLUGIN_NAME}"
 RC_SCRIPT="/etc/rc.d/rc.\${PLUGIN_NAME}"
 
@@ -105,7 +105,7 @@ echo ""
 #!/bin/bash
 set -euo pipefail
 
-PLUGIN_NAME="&name;"
+PLUGIN_NAME="${PLUGIN_NAME}"
 RC_SCRIPT="/etc/rc.d/rc.\${PLUGIN_NAME}"
 
 if [[ -x "\${RC_SCRIPT}" ]]; then
