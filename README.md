@@ -31,7 +31,8 @@ The plugin intentionally separates active files from persistent state:
 
 - Active plugin files in RAM:
   - `/usr/local/emhttp/plugins/komodo-periphery/`
-  - `/etc/rc.d/rc.komodo-periphery`
+  - `/usr/local/etc/rc.d/rc.komodo-periphery`
+  - `/etc/rc.d/rc.komodo-periphery` as a compatibility symlink for Unraid WebGUI service checks
 - Persistent user config on the flash:
   - `/boot/config/plugins/komodo-periphery/komodo-periphery.cfg`
   - `/boot/config/plugins/komodo-periphery/komodo-periphery-<version>-x86_64-1.tgz`
@@ -134,13 +135,15 @@ The UI is split into:
 - `Settings`
 - `Info`
 
-This follows the usual Unraid plugin pattern of a single entry point with dedicated subpages for control, configuration, and documentation.
+This now follows the Tailscale-style Unraid pattern more closely: a single root page under `Network Services` with numbered tab pages for `Settings`, `Status`, and `Info`.
+Internally, the child `.page` files use `Menu="KomodoPeriphery"` so Dynamix attaches them to the parent page name instead of the display title.
 
 ## Update Strategy
 
 The plugin update strategy is intentionally conservative:
 
 - the shipped binary is replaced on plugin update
+- the bundle is extracted with `--no-same-owner --no-same-permissions` so host directory metadata is not polluted by the build machine
 - `periphery.key` and `periphery.pub` live outside the package under `/boot/config/komodo/periphery-agent/keys/`
 - uninstall preserves persistent config and keys by default
 - runtime config is rendered idempotently from the user config each time the service is started

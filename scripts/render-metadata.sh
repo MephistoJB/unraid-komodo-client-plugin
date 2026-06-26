@@ -61,6 +61,7 @@ CFG_DIR="/boot/config/plugins/\${PLUGIN_NAME}"
 STATE_DIR="/boot/config/komodo/periphery-agent"
 BUNDLE="\${CFG_DIR}/$(bundle_name)"
 INSTALL_DIR="/usr/local/emhttp/plugins/\${PLUGIN_NAME}"
+RC_TARGET="/usr/local/etc/rc.d/rc.\${PLUGIN_NAME}"
 RC_SCRIPT="/etc/rc.d/rc.\${PLUGIN_NAME}"
 
 mkdir -p "\${CFG_DIR}" "\${STATE_DIR}"
@@ -76,10 +77,12 @@ fi
 
 rm -rf "\${INSTALL_DIR}"
 mkdir -p "\${INSTALL_DIR}"
-tar -xzf "\${BUNDLE}" -C /
+tar --no-same-owner --no-same-permissions -xzf "\${BUNDLE}" -C /
 
 chmod 0755 "/usr/local/emhttp/plugins/\${PLUGIN_NAME}/scripts/"*.sh
-chmod 0755 "/etc/rc.d/rc.\${PLUGIN_NAME}"
+chmod 0755 "\${RC_TARGET}"
+mkdir -p /etc/rc.d
+ln -sfn "\${RC_TARGET}" "\${RC_SCRIPT}"
 
 rm -f \$(ls "\${CFG_DIR}/\${PLUGIN_NAME}-"*-x86_64-1.tgz 2>/dev/null | grep -v "\${PLUGIN_VERSION}" || true)
 
@@ -107,12 +110,14 @@ set -euo pipefail
 
 PLUGIN_NAME="${PLUGIN_NAME}"
 RC_SCRIPT="/etc/rc.d/rc.\${PLUGIN_NAME}"
+RC_TARGET="/usr/local/etc/rc.d/rc.\${PLUGIN_NAME}"
 
 if [[ -x "\${RC_SCRIPT}" ]]; then
   "\${RC_SCRIPT}" stop || true
 fi
 
 rm -f "\${RC_SCRIPT}"
+rm -f "\${RC_TARGET}"
 rm -rf "/usr/local/emhttp/plugins/\${PLUGIN_NAME}"
 
 echo "Persistent files preserved:"

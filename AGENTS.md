@@ -56,7 +56,7 @@ Native Unraid plugin for running `komodo periphery` directly on the Unraid host 
   - `komodo-periphery.xml`
 - Unraid runtime files:
   - `src/usr/local/emhttp/plugins/komodo-periphery/`
-  - `src/etc/rc.d/rc.komodo-periphery`
+  - `src/usr/local/etc/rc.d/rc.komodo-periphery`
 - Persistent user config:
   - `/boot/config/plugins/komodo-periphery/komodo-periphery.cfg`
 - Persistent Komodo identity and runtime config:
@@ -72,6 +72,7 @@ Native Unraid plugin for running `komodo periphery` directly on the Unraid host 
 - Do not use Docker for the plugin runtime
 - Do not add `systemd`; Unraid service control must stay on `rc.d`
 - Preserve existing keys on update and default uninstall path
+- Do not package files directly into `/etc/rc.d`; use `/usr/local/etc/rc.d` and create only explicit compatibility symlinks when needed
 - Keep config, keys, logs, and runtime code clearly separated
 - Run syntax or type checks after changes
 - Keep CA metadata and `.plg` consistent with the released bundle URL

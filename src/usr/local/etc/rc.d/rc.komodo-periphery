@@ -3,15 +3,6 @@
 PLUGIN="komodo-periphery"
 BASE="/usr/local/emhttp/plugins/${PLUGIN}/scripts"
 
-run_cmd() {
-  if [[ ! -x "${BASE}/$1" ]]; then
-    echo "Missing script: ${BASE}/$1" >&2
-    exit 1
-  fi
-  shift
-  "${BASE}/$1" "$@"
-}
-
 case "${1:-}" in
   start)
     exec "${BASE}/start.sh"
@@ -34,4 +25,3 @@ case "${1:-}" in
     exit 1
     ;;
 esac
-
