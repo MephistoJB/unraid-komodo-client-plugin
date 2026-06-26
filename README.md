@@ -18,6 +18,10 @@ The plugin is designed for production-style Unraid usage:
   - the install entrypoint Unraid consumes
 - `komodo-periphery.xml`
   - Community Applications feed entry
+- `plugins/komodo-periphery.xml`
+  - Community Applications plugin wrapper in the layout expected by the current CA starter repository
+- `ca_profile.xml`
+  - repository-level Community Applications profile metadata used by the CA submission portal
 - `src/`
   - files that end up on the Unraid host
 - `scripts/`
@@ -175,9 +179,10 @@ To actually get listed, you still need:
 
 1. A public GitHub release containing the generated bundle referenced by `komodo-periphery.plg`.
 2. A public support thread on the Unraid forums.
-3. Submission of `komodo-periphery.xml` to the CA feed maintainers or the feed repository they request.
-4. Consistent long-term `pluginURL` ownership. Do not change the plugin identity or URL casually, because CA treats that as a security-sensitive event.
-5. Basic review readiness:
+3. A repository-level `ca_profile.xml` and a plugin wrapper under `plugins/komodo-periphery.xml`. The release prep script now generates both.
+4. Submission through the current CA portal flow at `https://ca.unraid.net/submit`, then `Validate`, `Scan`, and final review submission.
+5. Consistent long-term `pluginURL` ownership. Do not change the plugin identity or URL casually, because CA treats that as a security-sensitive event.
+6. Basic review readiness:
    - clean install/update/remove behavior
    - no secrets in repo
    - clear support and project metadata

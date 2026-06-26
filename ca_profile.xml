@@ -1,0 +1,4 @@
+<CommunityApplications>
+  <Profile>Native Unraid packaging for Komodo Periphery. This repository provides a host-native plugin that installs and runs Komodo Periphery without Docker, keeps configuration on the flash drive, preserves keys across updates, and exposes a simple Unraid UI for configuration, status, and onboarding.</Profile>
+  <WebPage>https://github.com/MephistoJB/unraid-komodo-client-plugin</WebPage>
+</CommunityApplications>

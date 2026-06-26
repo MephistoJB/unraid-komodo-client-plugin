@@ -18,6 +18,7 @@ BUNDLE_SHA256=$(shasum -a 256 "${BUNDLE_PATH}" | awk '{print $1}')
 DESCRIPTION=$(tr '\n' ' ' < "${REPO_ROOT}/meta/description.txt" | sed 's/[[:space:]]\+/ /g')
 CA_REQUIRES=$(tr '\n' ' ' < "${REPO_ROOT}/meta/ca-requires.txt" | sed 's/[[:space:]]\+/ /g')
 CHANGELOG_BODY=$(sed '1d' "${REPO_ROOT}/CHANGELOG.md")
+mkdir -p "${REPO_ROOT}/plugins"
 
 cat > "${REPO_ROOT}/${PLUGIN_NAME}.plg" <<EOF
 <?xml version='1.0' standalone='yes'?>
@@ -148,6 +149,17 @@ cat > "${REPO_ROOT}/${PLUGIN_NAME}.xml" <<EOF
 </Plugin>
 EOF
 
+cp "${REPO_ROOT}/${PLUGIN_NAME}.xml" "${REPO_ROOT}/plugins/${PLUGIN_NAME}.xml"
+
+cat > "${REPO_ROOT}/ca_profile.xml" <<EOF
+<CommunityApplications>
+  <Profile>Native Unraid packaging for Komodo Periphery. This repository provides a host-native plugin that installs and runs Komodo Periphery without Docker, keeps configuration on the flash drive, preserves keys across updates, and exposes a simple Unraid UI for configuration, status, and onboarding.</Profile>
+  <WebPage>${PROJECT_URL}</WebPage>
+</CommunityApplications>
+EOF
+
 echo "Generated:"
 echo "  ${REPO_ROOT}/${PLUGIN_NAME}.plg"
 echo "  ${REPO_ROOT}/${PLUGIN_NAME}.xml"
+echo "  ${REPO_ROOT}/plugins/${PLUGIN_NAME}.xml"
+echo "  ${REPO_ROOT}/ca_profile.xml"

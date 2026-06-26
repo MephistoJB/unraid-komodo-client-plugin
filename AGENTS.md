@@ -54,6 +54,8 @@ Native Unraid plugin for running `komodo periphery` directly on the Unraid host 
 - GitHub-facing artifacts:
   - `komodo-periphery.plg`
   - `komodo-periphery.xml`
+  - `plugins/komodo-periphery.xml`
+  - `ca_profile.xml`
 - Unraid runtime files:
   - `src/usr/local/emhttp/plugins/komodo-periphery/`
   - `src/usr/local/etc/rc.d/rc.komodo-periphery`
