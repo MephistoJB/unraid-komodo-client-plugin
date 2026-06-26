@@ -8,6 +8,7 @@ source "${SCRIPT_DIR}/lib.sh"
 require_cmd curl
 require_cmd tar
 require_cmd shasum
+require_cmd find
 
 OUTPUT_DIR="${REPO_ROOT}/dist"
 WORK_DIR="${REPO_ROOT}/build/bundle"
@@ -20,6 +21,9 @@ mkdir -p "${OUTPUT_DIR}" "${DOWNLOAD_DIR}" "${ROOTFS_DIR}"
 
 echo "Preparing bundle rootfs..."
 cp -R "${SRC_DIR}/." "${ROOTFS_DIR}/"
+
+# Strip macOS AppleDouble/resource-fork artifacts so the plugin bundle stays clean on Unraid.
+find "${ROOTFS_DIR}" -name '._*' -type f -delete
 
 mkdir -p "${ROOTFS_DIR}/usr/local/emhttp/plugins/${PLUGIN_NAME}/bin"
 
@@ -49,10 +53,9 @@ rm -f "${BUNDLE_PATH}"
 echo "Creating ${BUNDLE_PATH}..."
 (
   cd "${ROOTFS_DIR}"
-  tar -czf "${BUNDLE_PATH}" .
+  COPYFILE_DISABLE=1 tar --no-xattrs -czf "${BUNDLE_PATH}" .
 )
 
 echo "Bundle created:"
 echo "  ${BUNDLE_PATH}"
 echo "  sha256: $(shasum -a 256 "${BUNDLE_PATH}" | awk '{print $1}')"
-

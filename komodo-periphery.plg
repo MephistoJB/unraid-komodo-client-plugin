@@ -3,11 +3,11 @@
 <!ENTITY name        "komodo-periphery">
 <!ENTITY author      "MephistoJB">
 <!ENTITY version     "2026.06.26">
-<!ENTITY launch      "Settings/Komodo Periphery">
+<!ENTITY launch      "Network Services/Komodo Periphery">
 <!ENTITY pluginURL   "https://raw.githubusercontent.com/MephistoJB/unraid-komodo-client-plugin/main/komodo-periphery.plg">
 <!ENTITY bundle      "komodo-periphery-2026.06.26-x86_64-1.tgz">
 <!ENTITY bundleURL   "https://github.com/MephistoJB/unraid-komodo-client-plugin/releases/download/v2026.06.26/komodo-periphery-2026.06.26-x86_64-1.tgz">
-<!ENTITY bundleSHA256 "839b22f185cd70500a4f752cda11c7db6c0b8dc19e9ee4b711777e10eccf5795">
+<!ENTITY bundleSHA256 "8a5daa95b3686565f10e3485205ec13328ed80b66f5da299381f3f3d903661e2">
 <!ENTITY supportURL  "https://github.com/MephistoJB/unraid-komodo-client-plugin/issues">
 <!ENTITY projectURL  "https://github.com/MephistoJB/unraid-komodo-client-plugin">
 <!ENTITY readmeURL   "https://github.com/MephistoJB/unraid-komodo-client-plugin#readme">
@@ -39,11 +39,11 @@
 #!/bin/bash
 set -euo pipefail
 
-PLUGIN_NAME="&name;"
-PLUGIN_VERSION="&version;"
+PLUGIN_NAME="komodo-periphery"
+PLUGIN_VERSION="2026.06.26"
 CFG_DIR="/boot/config/plugins/${PLUGIN_NAME}"
 STATE_DIR="/boot/config/komodo/periphery-agent"
-BUNDLE="${CFG_DIR}/&bundle;"
+BUNDLE="${CFG_DIR}/komodo-periphery-2026.06.26-x86_64-1.tgz"
 INSTALL_DIR="/usr/local/emhttp/plugins/${PLUGIN_NAME}"
 RC_SCRIPT="/etc/rc.d/rc.${PLUGIN_NAME}"
 
@@ -89,7 +89,7 @@ echo ""
 #!/bin/bash
 set -euo pipefail
 
-PLUGIN_NAME="&name;"
+PLUGIN_NAME="komodo-periphery"
 RC_SCRIPT="/etc/rc.d/rc.${PLUGIN_NAME}"
 
 if [[ -x "${RC_SCRIPT}" ]]; then

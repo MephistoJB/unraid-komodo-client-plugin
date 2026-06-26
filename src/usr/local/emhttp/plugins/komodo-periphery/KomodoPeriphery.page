@@ -1,6 +1,7 @@
-Menu="Settings"
+Menu="NetworkServices"
 Title="Komodo Periphery"
 Icon="fa-server"
+Type="xmenu"
 ---
 <?php
 require_once "/usr/local/emhttp/plugins/dynamix/include/Helpers.php";

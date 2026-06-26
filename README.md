@@ -101,7 +101,7 @@ After publishing a GitHub release that contains the generated bundle:
 1. Open `Plugins` in Unraid.
 2. Choose `Install Plugin`.
 3. Paste the raw GitHub URL to [`komodo-periphery.plg`](https://raw.githubusercontent.com/MephistoJB/unraid-komodo-client-plugin/main/komodo-periphery.plg).
-4. Configure the plugin under `Settings -> Komodo Periphery`.
+4. Open `Network Services -> Komodo Periphery`.
 5. Set:
    - `PERIPHERY_CORE_ADDRESS`
    - `PERIPHERY_CONNECT_AS`
