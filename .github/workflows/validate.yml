@@ -8,7 +8,7 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Validate shell scripts
         run: find scripts src -type f \( -name '*.sh' -o -name 'rc.*' \) -print0 | xargs -0 -n1 bash -n
