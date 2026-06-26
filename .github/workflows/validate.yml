@@ -27,5 +27,5 @@ jobs:
       - name: Validate XML outputs
         run: |
           xmllint --noout komodo-periphery.plg
-          xmllint --noout komodo-periphery.xml
-
+          xmllint --noout plugins/komodo-periphery.xml
+          xmllint --noout ca_profile.xml
