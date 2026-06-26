@@ -7,7 +7,7 @@
 <!ENTITY pluginURL   "https://raw.githubusercontent.com/MephistoJB/unraid-komodo-client-plugin/main/komodo-periphery.plg">
 <!ENTITY bundle      "komodo-periphery-2026.06.26-x86_64-1.tgz">
 <!ENTITY bundleURL   "https://github.com/MephistoJB/unraid-komodo-client-plugin/releases/download/v2026.06.26/komodo-periphery-2026.06.26-x86_64-1.tgz">
-<!ENTITY bundleSHA256 "ccd8c68ae3cbfe9dc316fa80e81d084a77e77b13ede40ad633a7a10bef0f02df">
+<!ENTITY bundleSHA256 "839b22f185cd70500a4f752cda11c7db6c0b8dc19e9ee4b711777e10eccf5795">
 <!ENTITY supportURL  "https://github.com/MephistoJB/unraid-komodo-client-plugin/issues">
 <!ENTITY projectURL  "https://github.com/MephistoJB/unraid-komodo-client-plugin">
 <!ENTITY readmeURL   "https://github.com/MephistoJB/unraid-komodo-client-plugin#readme">
@@ -17,7 +17,7 @@
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" icon="server" min="6.12.0" pluginURL="&pluginURL;" support="&supportURL;" project="&projectURL;" readme="&readmeURL;">
 
-<DESCRIPTION>Run Komodo Periphery directly on Unraid as a native host service. The plugin keeps configuration under /boot/config/plugins/komodo-periphery and persistent Komodo state under /boot/config/komodo/periphery so updates do not rotate keys or lose onboarding.  </DESCRIPTION>
+<DESCRIPTION>Run Komodo Periphery directly on Unraid as a native host service. The plugin keeps configuration under /boot/config/plugins/komodo-periphery and persistent Komodo state under /boot/config/komodo/periphery-agent so updates do not rotate keys or lose onboarding. </DESCRIPTION>
 
 <CHANGES><![CDATA[
 
@@ -42,7 +42,7 @@ set -euo pipefail
 PLUGIN_NAME="&name;"
 PLUGIN_VERSION="&version;"
 CFG_DIR="/boot/config/plugins/${PLUGIN_NAME}"
-STATE_DIR="/boot/config/komodo/periphery"
+STATE_DIR="/boot/config/komodo/periphery-agent"
 BUNDLE="${CFG_DIR}/&bundle;"
 INSTALL_DIR="/usr/local/emhttp/plugins/${PLUGIN_NAME}"
 RC_SCRIPT="/etc/rc.d/rc.${PLUGIN_NAME}"
@@ -101,7 +101,7 @@ rm -rf "/usr/local/emhttp/plugins/${PLUGIN_NAME}"
 
 echo "Persistent files preserved:"
 echo "  /boot/config/plugins/${PLUGIN_NAME}"
-echo "  /boot/config/komodo/periphery"
+echo "  /boot/config/komodo/periphery-agent"
 echo "Remove them manually only if you want to rotate keys and wipe config."
 ]]></INLINE>
 </FILE>

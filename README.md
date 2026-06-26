@@ -8,7 +8,7 @@ The plugin is designed for production-style Unraid usage:
 - host-native daemon management via Unraid `rc.d`
 - event-driven boot/shutdown handling via Unraid `event/started` and `event/stopping`
 - persistent config in `/boot/config/plugins/komodo-periphery/`
-- persistent Komodo state and keys in `/boot/config/komodo/periphery/`
+- persistent Komodo state and keys in `/boot/config/komodo/periphery-agent/`
 - outbound connection model to Komodo Core
 - update-safe key handling so binary upgrades do not rotate identities by accident
 
@@ -36,10 +36,10 @@ The plugin intentionally separates active files from persistent state:
   - `/boot/config/plugins/komodo-periphery/komodo-periphery.cfg`
   - `/boot/config/plugins/komodo-periphery/komodo-periphery-<version>-x86_64-1.tgz`
 - Persistent Komodo state on the flash:
-  - `/boot/config/komodo/periphery/keys/periphery.key`
-  - `/boot/config/komodo/periphery/keys/periphery.pub`
-  - `/boot/config/komodo/periphery/config/periphery.config.toml`
-  - `/boot/config/komodo/periphery/data/`
+  - `/boot/config/komodo/periphery-agent/keys/periphery.key`
+  - `/boot/config/komodo/periphery-agent/keys/periphery.pub`
+  - `/boot/config/komodo/periphery-agent/config/periphery.config.toml`
+  - `/boot/config/komodo/periphery-agent/data/`
 - Volatile runtime files:
   - `/var/run/komodo-periphery.pid`
   - `/var/log/komodo-periphery.log`
@@ -114,7 +114,7 @@ After publishing a GitHub release that contains the generated bundle:
 The plugin update strategy is intentionally conservative:
 
 - the shipped binary is replaced on plugin update
-- `periphery.key` and `periphery.pub` live outside the package under `/boot/config/komodo/periphery/keys/`
+- `periphery.key` and `periphery.pub` live outside the package under `/boot/config/komodo/periphery-agent/keys/`
 - uninstall preserves persistent config and keys by default
 - runtime config is rendered idempotently from the user config each time the service is started
 
@@ -122,7 +122,7 @@ This avoids accidental re-keying when the plugin bundle changes.
 
 ## Tradeoff Chosen
 
-The default `PERIPHERY_ROOT_DIRECTORY` is `/boot/config/komodo/periphery/data` so the setup is fully self-contained and survives reboot without depending on array timing.
+The default `PERIPHERY_ROOT_DIRECTORY` is `/boot/config/komodo/periphery-agent/data` so the setup is fully self-contained and survives reboot without depending on array timing.
 
 Tradeoff:
 

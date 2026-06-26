@@ -5,7 +5,7 @@ PLUGIN_NAME="komodo-periphery"
 PLUGIN_DIR="/usr/local/emhttp/plugins/${PLUGIN_NAME}"
 CONFIG_DIR="/boot/config/plugins/${PLUGIN_NAME}"
 CONFIG_FILE="${CONFIG_DIR}/${PLUGIN_NAME}.cfg"
-STATE_DIR="/boot/config/komodo/periphery"
+STATE_DIR="/boot/config/komodo/periphery-agent"
 KEYS_DIR="${STATE_DIR}/keys"
 RUNTIME_CONFIG_DIR="${STATE_DIR}/config"
 RUNTIME_CONFIG_FILE="${RUNTIME_CONFIG_DIR}/periphery.config.toml"
@@ -15,6 +15,8 @@ BINARY="${PLUGIN_DIR}/bin/periphery"
 DEFAULT_CFG="${PLUGIN_DIR}/default.cfg"
 PUBLIC_KEY_FILE="${KEYS_DIR}/periphery.pub"
 PRIVATE_KEY_FILE="${KEYS_DIR}/periphery.key"
+LEGACY_BOOT_KEYS_DIR="/boot/config/komodo/keys"
+LEGACY_ETC_KEYS_DIR="/etc/komodo/keys"
 
 load_config() {
   if [[ -f "${DEFAULT_CFG}" ]]; then
@@ -29,11 +31,39 @@ load_config() {
 }
 
 ensure_layout() {
+  if [[ -e "${STATE_DIR}" && ! -d "${STATE_DIR}" ]]; then
+    echo "State path exists but is not a directory: ${STATE_DIR}" >&2
+    return 1
+  fi
   mkdir -p "${CONFIG_DIR}" "${STATE_DIR}" "${KEYS_DIR}" "${RUNTIME_CONFIG_DIR}" "${PERIPHERY_ROOT_DIRECTORY}"
 
   if [[ ! -f "${CONFIG_FILE}" ]]; then
     cp "${DEFAULT_CFG}" "${CONFIG_FILE}"
   fi
+
+  migrate_legacy_keys
+}
+
+migrate_legacy_keys() {
+  local source_dir=""
+
+  if [[ -s "${PRIVATE_KEY_FILE}" ]]; then
+    return 0
+  fi
+
+  if [[ -d "${LEGACY_BOOT_KEYS_DIR}" && -s "${LEGACY_BOOT_KEYS_DIR}/periphery.key" ]]; then
+    source_dir="${LEGACY_BOOT_KEYS_DIR}"
+  elif [[ -d "${LEGACY_ETC_KEYS_DIR}" && -s "${LEGACY_ETC_KEYS_DIR}/periphery.key" ]]; then
+    source_dir="${LEGACY_ETC_KEYS_DIR}"
+  fi
+
+  if [[ -z "${source_dir}" ]]; then
+    return 0
+  fi
+
+  cp -n "${source_dir}/periphery.key" "${KEYS_DIR}/periphery.key"
+  [[ -f "${source_dir}/periphery.pub" ]] && cp -n "${source_dir}/periphery.pub" "${KEYS_DIR}/periphery.pub"
+  [[ -f "${source_dir}/core.pub" ]] && cp -n "${source_dir}/core.pub" "${KEYS_DIR}/core.pub"
 }
 
 bool_to_toml() {

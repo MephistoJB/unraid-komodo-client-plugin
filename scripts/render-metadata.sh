@@ -58,7 +58,7 @@ set -euo pipefail
 PLUGIN_NAME="&name;"
 PLUGIN_VERSION="&version;"
 CFG_DIR="/boot/config/plugins/\${PLUGIN_NAME}"
-STATE_DIR="/boot/config/komodo/periphery"
+STATE_DIR="/boot/config/komodo/periphery-agent"
 BUNDLE="\${CFG_DIR}/&bundle;"
 INSTALL_DIR="/usr/local/emhttp/plugins/\${PLUGIN_NAME}"
 RC_SCRIPT="/etc/rc.d/rc.\${PLUGIN_NAME}"
@@ -117,7 +117,7 @@ rm -rf "/usr/local/emhttp/plugins/\${PLUGIN_NAME}"
 
 echo "Persistent files preserved:"
 echo "  /boot/config/plugins/\${PLUGIN_NAME}"
-echo "  /boot/config/komodo/periphery"
+echo "  /boot/config/komodo/periphery-agent"
 echo "Remove them manually only if you want to rotate keys and wipe config."
 ]]></INLINE>
 </FILE>
@@ -146,4 +146,3 @@ EOF
 echo "Generated:"
 echo "  ${REPO_ROOT}/${PLUGIN_NAME}.plg"
 echo "  ${REPO_ROOT}/${PLUGIN_NAME}.xml"
-

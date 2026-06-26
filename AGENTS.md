@@ -27,7 +27,7 @@ Native Unraid plugin for running `komodo periphery` directly on the Unraid host 
 - No Docker container for the agent itself
 - Installation through `.plg`
 - Persistent settings in `/boot/config/plugins/komodo-periphery/`
-- Persistent Komodo state and keys in `/boot/config/komodo/periphery/`
+- Persistent Komodo state and keys in `/boot/config/komodo/periphery-agent/`
 - GitHub-release-based bundle distribution
 - Community Applications metadata kept in-repo
 
@@ -60,8 +60,8 @@ Native Unraid plugin for running `komodo periphery` directly on the Unraid host 
 - Persistent user config:
   - `/boot/config/plugins/komodo-periphery/komodo-periphery.cfg`
 - Persistent Komodo identity and runtime config:
-  - `/boot/config/komodo/periphery/keys/`
-  - `/boot/config/komodo/periphery/config/periphery.config.toml`
+  - `/boot/config/komodo/periphery-agent/keys/`
+  - `/boot/config/komodo/periphery-agent/config/periphery.config.toml`
 - Volatile runtime state:
   - `/var/run/komodo-periphery.pid`
   - `/var/log/komodo-periphery.log`

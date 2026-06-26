@@ -1,4 +1,3 @@
 Run Komodo Periphery directly on Unraid as a native host service. The plugin keeps
 configuration under /boot/config/plugins/komodo-periphery and persistent Komodo state
-under /boot/config/komodo/periphery so updates do not rotate keys or lose onboarding.
-
+under /boot/config/komodo/periphery-agent so updates do not rotate keys or lose onboarding.
