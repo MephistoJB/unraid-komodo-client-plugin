@@ -53,7 +53,6 @@ Native Unraid plugin for running `komodo periphery` directly on the Unraid host 
   - `meta/plugin.env` pins plugin metadata and upstream Komodo artifact
 - GitHub-facing artifacts:
   - `komodo-periphery.plg`
-  - `komodo-periphery.xml`
   - `plugins/komodo-periphery.xml`
   - `ca_profile.xml`
 - Unraid runtime files:

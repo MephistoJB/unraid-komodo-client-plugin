@@ -131,7 +131,7 @@ echo "Remove them manually only if you want to rotate keys and wipe config."
 </PLUGIN>
 EOF
 
-cat > "${REPO_ROOT}/${PLUGIN_NAME}.xml" <<EOF
+cat > "${REPO_ROOT}/plugins/${PLUGIN_NAME}.xml" <<EOF
 <?xml version="1.0" encoding="utf-8"?>
 <Plugin>
     <PluginURL>$(plugin_url)</PluginURL>
@@ -149,8 +149,6 @@ cat > "${REPO_ROOT}/${PLUGIN_NAME}.xml" <<EOF
 </Plugin>
 EOF
 
-cp "${REPO_ROOT}/${PLUGIN_NAME}.xml" "${REPO_ROOT}/plugins/${PLUGIN_NAME}.xml"
-
 cat > "${REPO_ROOT}/ca_profile.xml" <<EOF
 <CommunityApplications>
   <Profile>Native Unraid packaging for Komodo Periphery. This repository provides a host-native plugin that installs and runs Komodo Periphery without Docker, keeps configuration on the flash drive, preserves keys across updates, and exposes a simple Unraid UI for configuration, status, and onboarding.</Profile>
@@ -160,6 +158,5 @@ EOF
 
 echo "Generated:"
 echo "  ${REPO_ROOT}/${PLUGIN_NAME}.plg"
-echo "  ${REPO_ROOT}/${PLUGIN_NAME}.xml"
 echo "  ${REPO_ROOT}/plugins/${PLUGIN_NAME}.xml"
 echo "  ${REPO_ROOT}/ca_profile.xml"

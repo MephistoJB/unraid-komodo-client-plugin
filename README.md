@@ -16,10 +16,8 @@ The plugin is designed for production-style Unraid usage:
 
 - `komodo-periphery.plg`
   - the install entrypoint Unraid consumes
-- `komodo-periphery.xml`
-  - Community Applications feed entry
 - `plugins/komodo-periphery.xml`
-  - Community Applications plugin wrapper in the layout expected by the current CA starter repository
+  - Community Applications plugin wrapper
 - `ca_profile.xml`
   - repository-level Community Applications profile metadata used by the CA submission portal
 - `src/`
@@ -170,7 +168,7 @@ For larger or more active installations, change `PERIPHERY_ROOT_DIRECTORY` to a 
 This repository already includes the core pieces CA expects:
 
 - stable `.plg` URL
-- separate CA XML metadata file
+- plugin wrapper under `plugins/`
 - icon URL
 - project/support links
 - minimum Unraid version
